@@ -1,27 +1,30 @@
 "use client";
 
 import { COLORS, ThoughtWithTags, ThoughtColor } from "@/lib/constants";
-import { togglePin, deleteThought } from "@/app/actions/thoughts";
 import { useState } from "react";
 
 export function ThoughtCard({
   thought,
   onEdit,
+  onTogglePin,
+  onDelete,
 }: {
   thought: ThoughtWithTags;
   onEdit: (thought: ThoughtWithTags) => void;
+  onTogglePin: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
   const [showActions, setShowActions] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const colorKey = (thought.color as ThoughtColor) || "gray";
   const colors = COLORS[colorKey] || COLORS.gray;
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirmDelete) {
       setConfirmDelete(true);
       return;
     }
-    await deleteThought(thought.id);
+    onDelete(thought.id);
   };
 
   return (
@@ -48,7 +51,7 @@ export function ThoughtCard({
           onClick={(e) => e.stopPropagation()}
         >
           <button
-            onClick={() => togglePin(thought.id)}
+            onClick={() => onTogglePin(thought.id)}
             className="rounded p-1 text-xs hover:bg-black/20"
             title={thought.pinned ? "Desafixar" : "Fixar"}
           >

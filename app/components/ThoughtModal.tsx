@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { updateThought, deleteThought } from "@/app/actions/thoughts";
 import { ColorPicker } from "./ColorPicker";
 import { ThoughtWithTags, ThoughtColor } from "@/lib/constants";
 
@@ -9,10 +8,22 @@ export function ThoughtModal({
   thought,
   allTags,
   onClose,
+  onSave,
+  onDelete,
 }: {
   thought: ThoughtWithTags;
   allTags: string[];
   onClose: () => void;
+  onSave: (
+    id: string,
+    data: {
+      content: string;
+      title?: string;
+      color?: string;
+      tagNames?: string[];
+    }
+  ) => void;
+  onDelete: (id: string) => void;
 }) {
   const [title, setTitle] = useState(thought.title || "");
   const [content, setContent] = useState(thought.content);
@@ -33,9 +44,9 @@ export function ThoughtModal({
     return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!content.trim()) return;
-    await updateThought(thought.id, {
+    onSave(thought.id, {
       content: content.trim(),
       title: title.trim() || undefined,
       color,
@@ -44,12 +55,12 @@ export function ThoughtModal({
     onClose();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirmDelete) {
       setConfirmDelete(true);
       return;
     }
-    await deleteThought(thought.id);
+    onDelete(thought.id);
     onClose();
   };
 

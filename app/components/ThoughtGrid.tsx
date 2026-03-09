@@ -7,9 +7,13 @@ import { ThoughtWithTags } from "@/lib/constants";
 export function ThoughtGrid({
   thoughts,
   onEdit,
+  onTogglePin,
+  onDelete,
 }: {
   thoughts: ThoughtWithTags[];
   onEdit: (thought: ThoughtWithTags) => void;
+  onTogglePin: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
   if (thoughts.length === 0) {
     return (
@@ -26,7 +30,13 @@ export function ThoughtGrid({
       columnClassName="flex flex-col"
     >
       {thoughts.map((thought) => (
-        <ThoughtCard key={thought.id} thought={thought} onEdit={onEdit} />
+        <ThoughtCard
+          key={thought.id}
+          thought={thought}
+          onEdit={onEdit}
+          onTogglePin={onTogglePin}
+          onDelete={onDelete}
+        />
       ))}
     </Masonry>
   );

@@ -1,11 +1,21 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { createThought } from "@/app/actions/thoughts";
 import { ColorPicker } from "./ColorPicker";
 import { ThoughtColor } from "@/lib/constants";
 
-export function QuickCapture({ allTags }: { allTags: string[] }) {
+export function QuickCapture({
+  allTags,
+  onCreate,
+}: {
+  allTags: string[];
+  onCreate: (data: {
+    content: string;
+    title?: string;
+    color?: ThoughtColor;
+    tagNames?: string[];
+  }) => void;
+}) {
   const [expanded, setExpanded] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,10 +33,10 @@ export function QuickCapture({ allTags }: { allTags: string[] }) {
     setExpanded(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!content.trim()) return;
 
-    await createThought({
+    onCreate({
       content: content.trim(),
       title: title.trim() || undefined,
       color,

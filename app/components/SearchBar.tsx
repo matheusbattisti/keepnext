@@ -1,36 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { ThoughtWithTags } from "@/lib/constants";
+import { useState, useEffect } from "react";
 
-export function SearchBar({
-  onResults,
-  onClear,
-}: {
-  onResults: (thoughts: ThoughtWithTags[]) => void;
-  onClear: () => void;
-}) {
+export function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {
   const [query, setQuery] = useState("");
 
-  const search = useCallback(
-    async (q: string) => {
-      if (!q.trim()) {
-        onClear();
-        return;
-      }
-      const res = await fetch(
-        `/api/search?q=${encodeURIComponent(q.trim())}`
-      );
-      const data = await res.json();
-      onResults(data);
-    },
-    [onResults, onClear]
-  );
-
   useEffect(() => {
-    const timer = setTimeout(() => search(query), 300);
+    const timer = setTimeout(() => onSearch(query), 300);
     return () => clearTimeout(timer);
-  }, [query, search]);
+  }, [query, onSearch]);
 
   return (
     <div className="mx-auto mb-4 max-w-xl">
