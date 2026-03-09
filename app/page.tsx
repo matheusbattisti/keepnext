@@ -16,7 +16,7 @@ export default async function Home() {
   return (
     <ThoughtBoard
       initialThoughts={JSON.parse(JSON.stringify(thoughts))}
-      allTags={tags.map((t) => t.name)}
+      allTags={tags.map((t: { id: string; name: string }) => t.name)}
     />
   );
 }
